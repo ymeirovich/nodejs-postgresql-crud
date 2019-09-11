@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 const path = require('path');
-
-var customers = require('./routes/customers'); 
+//https://github.com/dannibla/nodejs-postgresql-crud
+var customers = require('./routes/customers');
 var routes = require('./routes');
 var app = express();
 
@@ -23,6 +23,6 @@ app.get('/customers/delete/:id', customers.delete);
 app.get('/customers/edit/:id', customers.edit);
 app.post('/customers/edit/:id', customers.update);
 
-app.listen(4000, function () {
+app.listen(4000, function() {
     console.log('Server is running.. on Port 4000');
 });

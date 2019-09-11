@@ -1,5 +1,5 @@
 const { Client } = require('pg');
-var connectionString = "postgres://postgres:root@localhost:5432/database";
+var connectionString = "postgres://postgres:root@localhost:5432/dvdrental";
 
 const client = new Client({
     connectionString: connectionString
@@ -7,9 +7,9 @@ const client = new Client({
 
 client.connect();
 
-exports.list = function (req, res) {
+exports.list = function(req, res) {
 
-    client.query('SELECT * FROM customer', function (err, result) {
+    client.query('SELECT * FROM customer', function(err, result) {
         if (err) {
             console.log(err);
             res.status(400).send(err);
@@ -19,15 +19,15 @@ exports.list = function (req, res) {
 
 };
 
-exports.add = function (req, res) {
-    res.render('customer/add', { title: "Add Customer"  });
+exports.add = function(req, res) {
+    res.render('customer/add', { title: "Add Customer" });
 };
 
-exports.edit = function (req, res) {
+exports.edit = function(req, res) {
 
     var id = req.params.id;
 
-    client.query('SELECT * FROM customer WHERE id=$1', [id], function (err, result) {
+    client.query('SELECT * FROM customer WHERE customer_id=$1', [id], function(err, result) {
         if (err) {
             console.log(err);
             res.status(400).send(err);
@@ -37,11 +37,11 @@ exports.edit = function (req, res) {
 
 };
 
-exports.save = function (req, res) {
+exports.save = function(req, res) {
 
-    var cols = [req.body.name, req.body.address, req.body.email, req.body.phone];
-
-    client.query('INSERT INTO customer(name, address, email, phone) VALUES($1, $2, $3, $4) RETURNING *', cols, function (err, result) {
+    var cols = [req.body.first_name, req.body.last_name, req.body.address_id, req.body.email, 1];
+    console.log(cols.toString())
+    client.query('INSERT INTO customer(first_name, last_name, address_id, email, store_id) VALUES($1, $2, $3, $4, $5) RETURNING *', cols, function(err, result) {
         if (err) {
             console.log("Error Saving : %s ", err);
         }
@@ -50,24 +50,27 @@ exports.save = function (req, res) {
 
 };
 
-exports.update = function (req, res) {
+exports.update = function(req, res) {
 
-    var cols = [req.body.name, req.body.address, req.body.email, req.body.phone, req.params.id];
+    var cols = [req.body.first_name, req.body.address_id, req.body.email, req.body.last_name, req.params.id];
+    console.log(cols.toString())
 
-    client.query('UPDATE customer SET name=$1, address=$2,email=$3, phone=$4 WHERE id=$5', cols, function (err, result) {
+    client.query('UPDATE customer SET first_name=$1, address_id=$2,email=$3,last_name=$4 WHERE customer_id=$5', cols, function(err, result) {
         if (err) {
             console.log("Error Updating : %s ", err);
         }
+
+        console.log(result)
         res.redirect('/customers');
     });
 
 };
 
-exports.delete = function (req, res) {
+exports.delete = function(req, res) {
 
     var id = req.params.id;
 
-    client.query("DELETE FROM customer WHERE id=$1", [id], function (err, rows) {
+    client.query("DELETE FROM customer WHERE customer_id=$1", [id], function(err, rows) {
         if (err) {
             console.log("Error deleting : %s ", err);
         }
@@ -75,5 +78,3 @@ exports.delete = function (req, res) {
     });
 
 };
-
-

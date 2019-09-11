@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"jshint.enable": false,
+		"eslint.enable": false,
+		"tslint.enable": false
+	}
+}
